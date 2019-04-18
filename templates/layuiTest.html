@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+            <i class="layui-icon layui-icon-face-smile" style=" color: #1E9FFF;"></i>
+            Jinja
+        </title>
+		<link rel="stylesheet" href="/static/css/layui.css"  media="all">
+	</head>
+	<body>
+		<ul class="layui-nav" lay-filter="">
+			<li class="layui-nav-item">
+				<a href="">最新活动</a>
+			</li>
+			<li class="layui-nav-item ">
+				<a href="">产品</a>
+			</li>
+			<li class="layui-nav-item">
+				<a href="">大数据</a>
+			</li>
+			<li class="layui-nav-item">
+				<a href="javascript:;">解决方案</a>
+				<dl class="layui-nav-child">
+					<!-- 二级菜单 -->
+					<dd>
+						<a href="">移动模块</a>
+					</dd>
+					<dd>
+						<a href="">后台模版</a>
+					</dd>
+					<dd>
+						<a href="">电商平台</a>
+					</dd>
+				</dl>
+			</li>
+			<li class="layui-nav-item">
+				<a href="">社区</a>
+			</li>
+		</ul>
+
+		<table class="layui-table">
+			<colgroup>
+				<col width="150">
+				<col width="200">
+				<col>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>昵称</th>
+					<th>加入时间</th>
+					<th>签名</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>贤心</td>
+					<td>2016-11-29</td>
+					<td>人生就像是一场修行</td>
+				</tr>
+				<tr>
+					<td>许闲心</td>
+					<td>2016-11-28</td>
+					<td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
+				</tr>
+			</tbody>
+		</table>
+		<div>
+		 <button class="layui-btn ">提交</button>
+		</div>
+		<div>
+			<i class="layui-icon layui-icon-face-smile" style="font-size: 30px; color: #1E9FFF;"></i>
+		    <i class="layui-icon layui-icon-cellphone" style="font-size: 30px; color: #1E9FFF;"></i>
+		</div>
+
+		<div id="test1"></div>
+		<div>
+
+		</div>
+		<div class="layui-card-body layui-bg-black" style="text-align: center;">
+			{{ content }}
+		</div>
+
+
+		<!-------------------------------------->
+
+
+
+		<script src="/static/js/layui.js"></script>
+		<script>
+			//注意：导航 依赖 element 模块，否则无法进行功能性操作
+			layui.use('element', function() {
+				var element = layui.element;
+
+				//…
+			});
+		</script>
+		<script>
+			layui.use('rate', function() {
+				var rate = layui.rate;
+
+				//渲染
+				var ins1 = rate.render({
+					elem: '#test1' //绑定元素
+				});
+			});
+		</script>
+
+	</body>
+</html>

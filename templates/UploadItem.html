@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="text-align: center;">
+    <form action="{{ url_for('upload') }}" method="post">
+        图 片：<input type="file" name="fname"><br>
+        产品名称：<input type="text" name="name"/><br>
+        描 述：<input type="text" name="detail"/><br>
+        价 格：<input type="text" name="price"><br>
+        <input type="submit" value="Submit"/>
+</div>
+
+</form>
+</body>
+</html>
