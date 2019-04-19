@@ -1,12 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html >
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>收入来源分析</title>
     <!-- 引入 echarts.js -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/echarts.min.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/echarts.min.js"></script>
     <!-- 引入jquery.js -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/static/webapp/js/jquery-3.2.1.min.js"></script>
 </head>
 
 <body>
@@ -25,7 +24,7 @@
 			$.ajax({
 				type : "post",
 		
-			url : "${pageContext.request.contextPath}/index/incomeCharts1", //请求发送到TestServlet处
+			url : "/user/incomeCharts1", //请求发送到TestServlet处
 			data : {},
 			dataType : "json", //返回数据形式为json
 			success : function(result) {

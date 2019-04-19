@@ -321,6 +321,7 @@ def findDepotCardByCardnum():
     depotcard = depotcard.to_dic()
 
     data = {'code': 200, 'cardTypes': payload, 'depotcard': depotcard}
+    return jsonify({'code': 200, 'cardTypes': payload, 'depotcard': depotcard})
 
 
 # 停车卡充值
@@ -436,6 +437,20 @@ def line():
         ispark = ParkSpace.query.filter_by(status=1).count()
         return jsonify({'code': 200, 'ispark': ispark})
     return render_template('line.html')
+
+
+# 查看收入分析echart图
+@user.route('/incomeCharts1', methods=['post', 'get'])
+def incomeCharts1():
+    if request.method == "GET":
+        return render_template('incomeCharts.html')
+
+    if request.method == "POST":
+        cash = Income.query.filter_by(method=0).count()
+        zhifubao = Income.query.filter_by(method=1).count()
+        weixin = Income.query.filter_by(method=2).count()
+        return jsonify({'code': 200, 'cash': cash, 'zhifubao': zhifubao, 'weixin': weixin})
+    return render_template('incomeCharts.html')
 
 
 # 收入管理

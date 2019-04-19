@@ -96,6 +96,7 @@
 <script type="text/javascript">
     $(function () {
             xuhao();
+
             function xuhao() {
                 $(".xuhao").each(function () {
                     var index = $(".xuhao").index(this) + 1;
@@ -244,34 +245,34 @@
                         + "</div>"
                         + "<label>持卡人：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input id=\"username\" name=\"username\" value=\"" + data.user.username + "\" type=\"text\" class=\"form-control\" readonly>"
+                        + "<input id=\"username\" name=\"username\" value=\"" + data.depotcard.username + "\" type=\"text\" class=\"form-control\" readonly>"
                         + "</div></div>"
                         + "<label>挂失：</label>"
                         + "<select id=\"islose\" name=\"islose\" style=\"width:100px\" class=\"form-control\"> "
                         + "<option value=\"0\">否</option><option value=\"1\">是</option> </select>";
-                    if (data.extend.user_role != 3) {
-                        html += "<label>卡类型：</label>"
-                            + "<select id=\"type\" name=\"type\" style=\"width:100px\" class=\"form-control\"> "
-                            + option
-                            + " </select>";
+                    //if (data.user_role != 3) {
+                    html += "<label>卡类型：</label>"
+                        + "<select id=\"type\" name=\"type\" style=\"width:100px\" class=\"form-control\"> "
+                        + option
+                        + " </select>";
+                   // }
+                        $("#myModalLabel").html("修改停车卡");
+                        $("#checkSubmit").html("修改");
+                        if (data.depotcard.islose == 1) {
+                            $("#loseSubmit").show();
+                            $("#loseSubmit").attr("onclick", "changeLoseCardSubmit()");
+                        }
+                        $("#checkSubmit").attr("onclick", "isAlertType()");
+                        $(".modal-body").append(html);
+                        $("#myModal").modal('show');
+                        $("#type").val(data.depotcard.type);
+                        $("#islose").val(data.depotcard.islose);
                     }
-                    $("#myModalLabel").html("修改停车卡");
-                    $("#checkSubmit").html("修改");
-                    if (data.extend.depotcard.islose == 1) {
-                        $("#loseSubmit").show();
-                        $("#loseSubmit").attr("onclick", "changeLoseCardSubmit()");
-                    }
-                    $("#checkSubmit").attr("onclick", "isAlertType()");
-                    $(".modal-body").append(html);
-                    $("#myModal").modal('show');
-                    $("#type").val(data.extend.cardType.id);
-                    $("#islose").val(data.extend.depotcard.islose);
+                    $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                    $("#findDepotcard").click();
                 }
-                $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
-                $("#findDepotcard").click();
-            }
 
-        })
+            })
     }
 
     //提交更换丢失的卡号
