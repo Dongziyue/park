@@ -1794,7 +1794,8 @@
     </column>
     <column id="401" parent="245" name="money">
       <Position>4</Position>
-      <DataType>float|0s</DataType>
+      <DataType>float(20,2 digit)|0s</DataType>
+      <DefaultExpression>&apos;0.00&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="402" parent="245" name="time">
@@ -1998,7 +1999,7 @@
     <column id="436" parent="249" name="money">
       <Position>2</Position>
       <Comment>收入</Comment>
-      <DataType>double(20,2 digit)|0s</DataType>
+      <DataType>float(20,2 digit)|0s</DataType>
       <DefaultExpression>&apos;0.00&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
@@ -2049,7 +2050,8 @@
     <column id="444" parent="249" name="duration">
       <Position>10</Position>
       <Comment>停车时长</Comment>
-      <DataType>bigint(20)|0s</DataType>
+      <DataType>float(20,2 digit)|0s</DataType>
+      <DefaultExpression>&apos;0.00&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="445" parent="249" name="trueincome">

@@ -39,19 +39,30 @@ def add_ParkSpace():
     cardnum = request.form.get('cardNum')
     carnum = request.form.get('carNum')
     parktemp = request.form.get('parkTem')
-
     parkspace = ParkSpace.query.filter_by(parkid=parkNum).first()
     parkspace.status = 1
     parkspace.cardnum = cardnum
+    tag = parkspace.tag
     db.session.commit()
 
     cur_time = datetime.datetime.now()
 
-    parkinfo = Parkinfo(parknum=parkNum, cardnum=cardnum, carnum=carnum,
-                        parktemp=parktemp, parkin=cur_time)
-    db.session.add(parkinfo)
+    parkinfo = Parkinfo.query.filter_by(parknum=parkNum).first()
+    parkinfo.cardnum = cardnum
+    parkinfo.carnum = carnum
+    parkinfo.parkin = cur_time
+    parkinfo.parktemp = parktemp
     db.session.commit()
-    return jsonify({'code': 200, 'id': id})
+
+    # 添加停车记录-入库
+    parkinfo = Parkinfo.query.filter_by(parknum=parkNum).first()
+    parkinfoall = Parkinfoall(parknum=parkinfo.parknum, cardnum=parkinfo.cardnum,
+                              carnum=parkinfo.carnum, parktemp=parkinfo.parktemp,
+                              parkin=parkinfo.parkin)
+
+    db.session.add(parkinfoall)
+    db.session.commit()
+    return jsonify({'code': 200, 'id': tag})
 
 
 # 查看停车详情
@@ -60,13 +71,18 @@ def parkDetail():
     parknum = request.args.get('parkNum')
     parkSpace = ParkSpace.query.filter_by(parkid=parknum).first()
     cardnum = parkSpace.cardnum
-    parkinfo = Parkinfo.query.filter_by(parknum=parknum, cardnum=cardnum).first()
+    parkinfo = Parkinfo.query.filter_by(parknum=parknum).first()
 
     if parkinfo:
         depotcard = Depotcard.query.filter_by(cardnum=cardnum).first()
+        # 判断是否有卡
+        if depotcard:
+            username = depotcard.username
+        else:
+            username = "临时停车"
         data = {'code': 200, 'cardnum': parkinfo.cardnum, 'parknum': parknum, 'carnum': parkinfo.carnum,
                 'parkin': parkinfo.parkin,
-                'parktemp': parkinfo.parktemp, 'username': depotcard.username}
+                'parktemp': parkinfo.parktemp, 'username': username}
     else:
         data = {'code': 500}
     return jsonify(data)
@@ -78,9 +94,8 @@ def ex_ParkSpace():
     parknum = request.args.get('parkNum')
     parkspace = ParkSpace.query.filter_by(parkid=parknum).first()
     cardnum = parkspace.cardnum
-    # parkspace.status = 0
 
-    parkinfo = Parkinfo.query.filter_by(parknum=parknum, cardnum=cardnum).first()
+    parkinfo = Parkinfo.query.filter_by(parknum=parknum).first()
     return jsonify({'code': 200, 'parknum': parkinfo.parknum,
                     'cardnum': parkinfo.cardnum, 'carnum': parkinfo.carnum, 'parktemp': parkinfo.parktemp})
 
@@ -96,9 +111,10 @@ def isPay():
     parktime = cur_time - parkinfo.parkin
     park_time = (parktime.seconds / 60) / 60
     money_pay = round(park_time * 5, 2)
-    # 如何收费小于3元，收费3元
+    # 如果收费小于3元，收费3元
     if money_pay < 3:
         money_pay = 3.00
+
     return jsonify({'code': 200, 'money_pay': money_pay, 'va_msg': '准备进入支付......确认出库？'})
 
 
@@ -108,23 +124,47 @@ def checkOut():
     parknum = request.form.get("parkNum")
     cardNum = request.form.get('cardNum')
     pay_money = request.form.get('pay_money')
+    # 收入记录
+    method = request.form.get("payid")
+    carnum = request.form.get("carNum")
+
     parkspace = ParkSpace.query.filter_by(parkid=parknum).first()
     parkspace.status = 0
     parkspace.cardnum = ''
     db.session.commit()
 
+    # 停车历史记录添加
     parkinfo = Parkinfo.query.filter_by(parknum=parknum).first()
     cur_time = datetime.datetime.now()
-    parkinfoall = Parkinfoall(parknum=parkinfo.parknum, cardnum=parkinfo.cardnum,
-                              carnum=parkinfo.carnum, parktemp=parkinfo.parktemp,
-                              parkin=parkinfo.parkin, parkout=cur_time)
-
-    db.session.add(parkinfoall)
+    parkinfoall = Parkinfoall.query.filter_by(parknum=parknum, cardnum=parkinfo.cardnum,
+                                              carnum=parkinfo.carnum, parkin=parkinfo.parkin).first()
+    parkinfoall.parkout = cur_time
+    parktime = cur_time - parkinfo.parkin
     db.session.commit()
+    # 停车时长
+    park_time = (parktime.seconds / 60)
+    # 扣费
+    if cardNum:
+        # 有停车卡
+        depotcard = Depotcard.query.filter_by(cardnum=cardNum).first()
+        depotcard.money = depotcard.money - float(pay_money)
+        db.session.commit()
+        type = depotcard.type
+        # 添加一条收费记录
+        income = Income(money=pay_money, method=method, type=type,
+                        carnum=carnum, cardnum=cardNum, source=1,
+                        time=cur_time, duration=park_time, trueincome=1)
+        db.session.add(income)
+        db.session.commit()
+    else:
+        # 临时停车
+        income = Income(money=pay_money, method=method, type=0,
+                        carnum=carnum, cardnum="临时停车", source=1,
+                        time=cur_time, duration=park_time, trueincome=1)
+        db.session.add(income)
+        db.session.commit()
+        print("临时停车出库成功")
 
-    depotcard = Depotcard.query.filter_by(cardnum=cardNum).first()
-    depotcard.money = depotcard.money - float(pay_money)
-    db.session.commit()
     return jsonify({'code': 200})
 
 
@@ -288,10 +328,20 @@ def findDepotCardByCardnum():
 def charge_DepotCard():
     cardnum = request.form.get('cardnum')
     money = request.form.get('money')
+    pay_money = float(money)
     depotcard = Depotcard.query.filter_by(cardnum=cardnum).first()
     money = depotcard.money + float(money)
     depotcard.money = money
+    print(depotcard.money)
     db.session.commit()
+    # 添加一条收费记录
+    cur_time = datetime.datetime.now()
+    income = Income(money=pay_money, method=3, type=depotcard.type,
+                    cardnum=cardnum, source=0,
+                    time=cur_time, trueincome=0)
+    db.session.add(income)
+    db.session.commit()
+
     return jsonify({'code': 200})
 
 

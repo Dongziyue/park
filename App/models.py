@@ -50,7 +50,7 @@ class Depotcard(db.Model):
     username = db.Column(db.String(64))  # 用户名
     cardnum = db.Column(db.String(64))  # 卡号
     type = db.Column(db.Integer)  # 卡类型
-    money = db.Column(db.FLOAT)  # 余额
+    money = db.Column(db.FLOAT, default=0.00)  # 余额
     time = db.Column(db.DATE)  # 发卡时间
     illegalcount = db.Column(db.Integer, default=0)  # 是否挂失
     deductedtime = db.Column(db.DATE)  # 扣费时间
@@ -86,5 +86,5 @@ class Income(db.Model):
     isillegal = db.Column(db.Integer, default=0)  # 是否有违规
     source = db.Column(db.Integer, default=1)  # 收入来源，0充值卡，1出库收费
     time = db.Column(db.DATE, default="")  # 收入时间
-    duration = db.Column(db.Integer, default="")  # 停车时长
+    duration = db.Column(db.FLOAT, default=0.00)  # 停车时长
     trueincome = db.Column(db.Integer, default=0)  # 是否真正收入（0：否，1：是）

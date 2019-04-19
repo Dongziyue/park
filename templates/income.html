@@ -64,6 +64,8 @@
                                 {{ "支付宝" }}
                             {% elif item.method==2 %}
                                 {{ "微信" }}
+                            {% elif item.method==3 %}
+                            {{ "卡充值" }}
                             {% else %}
                                 {{ "扣卡费" }}
                             {% endif %}
