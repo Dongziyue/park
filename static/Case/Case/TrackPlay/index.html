@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内地图轨迹回放-人员轨迹回放|空间地图</title>
+    <meta name="keywords" content="室内地图轨迹回放,人员轨迹回放,室内地图,三维地图引擎,室内定位,PythonWeb停车场地图" />
+    <meta name="description" content="室内地图轨迹回放,人员轨迹回放,PythonWeb停车场室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+    <link href="../../lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/iconfont/iconfont.css" rel="stylesheet">
+</head>
+<style type="text/css">
+    #pannel {
+        position: absolute;
+        left: 2%;
+        bottom: 10%;
+        z-index: 999;
+    }
+
+    #begin {
+        background-color: rgb(97, 195, 212);
+    }
+
+    .viewmode-group {
+        position: absolute;
+        right: 12px;
+        top: 32%;
+        border-radius: 6px;
+        border: none;
+    }
+
+    .viewmode-group button {
+        display: inline-block;
+        width: 38px;
+        height: 38px;
+        border-radius: 4px;
+        border: none;
+        background-image: url("image/wedgets/3D.png");
+    }
+</style>
+
+<body ms-controller="ctrl" class="ms-controller">
+    <div id="map-container"></div>
+    <div class="loading">
+        <div class="lodingImg"></div>
+    </div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <h1><a href="/" title="室内地图-地图轨迹回放" target="_blank">PythonWeb停车场室内三维地图引擎</a>（室内地图轨迹回放）</h1>
+
+            <div class="tips-right">
+                <span class="tip1"></span>
+                <span class="tip2"></span>
+            </div>
+            <div class="tips-msg">
+                <div class="msg msg1">
+                    <div class="erweima"></div>
+                    <p>手机扫一扫进入体验</p>
+                </div>
+                <div class="msg msg2">
+                    <h4>室内地图轨迹回放功能(人员轨迹回放)</h4>
+                    <p>1. 点击开始,图片文字标注显示轨迹,并实时更新轨迹回放</p>
+                    <p>2. 模拟真实从后台接口拉取需要回放的人员轨迹点数据</p>
+                    <div style="display: none">室内地图轨迹回放,人员轨迹回放,PythonWeb停车场室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="pannel">
+        <input type="button" id="begin" class="btn btn-default btnclass" value="开始" />
+    </div>
+    <div class="viewmode-group">
+        <button id="btn3D" class="btn btn-default"></button>
+    </div>
+    <script src="../../lib/config.js"></script>
+    <script src="../../lib/esmap.min.js"></script>
+    <script src="../../lib/jquery-2.1.4.min.js"></script>
+    <script src="../../lib/jquery.qrcode.min.js"></script>
+    <script src="../../lib/tips_controls.js"></script>
+    <script src="../../lib/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        //定义全局map变量
+        var map;
+        var esmapID = getQueryString('id') || defaultOpt.mapID;
+        var styleid = getQueryString("styleid") || defaultOpt.themeID;
+        var floorControl;
+        var floorLayer;
+        var coordIndex = 0; //坐标点下标
+        var coordsData = null;
+        var timer = -1;
+        var mapCoord;
+        var tm, tm2, tm3, layer1, layer2, layer3;
+        var coord;
+        // 楼层控制控件配置参数（几楼）
+        var ctlOpt = new esmap.ESControlOptions({
+            position: esmap.ESControlPositon.RIGHT_TOP,
+            imgURL: 'image/wedgets/'
+            // allLayer: true
+            // size:"normal"
+        })
+        // 放大、缩小控件配置
+        var ctlOpt1 = new esmap.ESControlOptions({
+            position: esmap.ESControlPositon.LEFT_TOP, // 位置 左上角
+            // 位置x,y的偏移量
+            offset: {
+                x: 20,
+                y: 60
+            },
+            imgURL: 'image/wedgets/'
+        })
+        map = new esmap.ESMap({
+            container: $('#map-container')[0], // 渲染dom
+            mapDataSrc: "../../data", //地图数据位置
+            mapThemeSrc: "../../data/theme", //主题数据位置
+            focusAlphaMode: true, // 对不可见图层启用透明设置 默认为true
+            focusAnimateMode: true, // 开启聚焦层切换的动画显示
+            focusAlpha: 0.1, // 对不聚焦图层启用透明设置，当focusAlphaMode = true时有效
+            focusFloor: 1
+        });
+        map.openMapById(esmapID); //打开地图
+        map.showCompass = true; //显示指南针 
+
+        //从后台接口拉取需要回放的人员轨迹点数据
+        $.getJSON("data.json", function (data) {
+            coordsData = data.points;
+        });
+
+         //地图加载完成回调
+         map.on('loadComplete', function () {
+            floorControl = new esmap.ESScrollFloorsControl(map, ctlOpt);
+            var zoomControl = new esmap.ESZoomControl(map, ctlOpt1);
+            bingEvents();
+        });
+
+        var begin = document.getElementById("begin");
+        begin.onclick = function () {
+            if (timer != -1) {
+                return;
+            }
+            flag = true;
+            coordIndex = 0;
+            updateCoord();
+        }
+
+        function CreateMarker(x, y, fnum) { //标注起始坐标点， 所在楼层
+            layer = new esmap.ESLayer('textMarker');
+            floorLayer = map.getFloor(fnum); // 所在楼层
+            tm = new esmap.ESTextMarker({
+                x: x, //gpos1.x - 16
+                y: y, //gpos1.y + 25
+                name: "小张",
+                showLevel: 20,
+                height: 0.5,
+                image: "image/user.png",
+                imageAlign: "bottom",
+                imageSize: 50,
+                seeThrough: true,
+                // spritify: true, //是否跟随地图缩放默认为true
+                fillcolor: "1,6,7", //填充色
+                fontsize: "8.0", //字体大小
+                strokecolor: "255,255,0" //边框色  
+            });
+            layer.addMarker(tm);
+            floorLayer.addLayer(layer);
+        }
+
+        function updateCoord() { //实时刷新轨迹线
+            var points = [];
+            var lastfnum=0;
+            timer = setInterval(updated, 100);
+            function updated() {
+                if (coordIndex >= coordsData.length) {//数据用完了，关掉定时器，清0
+                    clearInterval(timer);
+                    timer = -1;
+                    map.clearLineMarkById("routes");
+                    if(lastfnum>0)
+                        map.getFloor(lastfnum).removeLayersByTypes(esmap.ESLayerType.TEXT_MARKER);
+                    return;
+                }
+
+                var coord = coordsData[coordIndex]; //取坐标点
+                if(map.focusFloorNum != coord.fnum)
+                	map.focusFloorNum = coord.fnum; //判断聚焦楼层 
+                if(lastfnum!=coord.fnum)//切换层的时候先要清除之前层的Marker
+                {
+                    if(lastfnum>0)
+                        map.getFloor(lastfnum).removeLayersByTypes(esmap.ESLayerType.TEXT_MARKER);
+                    CreateMarker(coord.x, coord.y, coord.fnum);
+                    lastfnum=coord.fnum;
+                    points = [];
+                }
+
+                tm.moveTo({
+                    x: coord.x,
+                    y: coord.y,
+                    time: 0
+                });
+                //只保留16个点  画轨迹线
+                if (points.length > 16) {
+                    points.shift(); //先踢掉第一个
+                }
+                points.push(coord); //在把新点加入进去
+                drawLine(points);
+                coordIndex++;
+            }
+        }
+
+        //配置线标注样式
+        var lineStyle = {
+            lineWidth: 3,
+            alpha: 0.8,
+            offsetHeight: 0,
+            lineType: esmap.ESLineType.FULL
+        }
+
+        //画轨迹线
+        function drawLine(points) {
+            if (points.length && points.length <= 1) return;
+            map.clearLineMarkById("routes");
+            //创建线标注对象
+            line = new esmap.ESLineMarker("routes", points, lineStyle);
+            //调用地图的画线方法
+            map.drawLineMark(line);
+        }
+
+        //绑定事件
+        function bingEvents() {
+            document.getElementById('btn3D').onclick = function () {
+                if (map.viewMode == esmap.ESViewMode.MODE_2D) {
+                    map.viewMode = esmap.ESViewMode.MODE_3D; //2D-->3D
+                    document.getElementById('btn3D').style.backgroundImage = "url('image/wedgets/3D.png')";
+                } else {
+                    map.viewMode = esmap.ESViewMode.MODE_2D; //3D-->2D
+                    document.getElementById('btn3D').style.backgroundImage = "url('image/wedgets/2D.png')";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

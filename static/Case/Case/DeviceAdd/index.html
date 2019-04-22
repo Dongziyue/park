@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta HTTP-EQUIV="pragma" CONTENT="no-cache"> -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <title>室内地图添加摄像头|易景空间地图</title>
+    <meta name="keywords" content="室内地图添加设备,室内地图添加摄像头,室内地图,三维地图引擎,室内定位,易景地图" />
+    <meta name="description" content="室内地图添加设备,室内地图添加摄像头,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+    <link rel="shortcut icon" type="image/ico" href="../../image/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="../../lib/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="css/common.css">
+    <link type="text/css" rel="stylesheet" href="css/formstyle.css" />
+    <style>
+        .center-group{
+			position: absolute;
+			right: 12px;
+			top: 12%;
+		}
+		html, body {
+		    background-color: rgb(60, 96, 112);
+		}
+	    .navbar {
+            margin-bottom: 0;
+        }
+        
+        .btn-group-vertical .btn  {
+            padding: 5px 11px;
+            color:rgb(200, 210, 218);
+            background-color: rgb(27, 103, 141);
+            border: none;
+            cursor: pointer;
+            border: 1px solid rgb(1, 18, 27)
+        }
+        .viewmode-group {
+            position: absolute;
+            right: 12px;
+            top: 26%;
+            border-radius: 6px;
+            border: none;
+        }
+        .viewmode-group button {
+            display: inline-block;
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            border: none;
+            background-image: url("image/wedgets/3D.png");
+        }
+        .zoneinfo {
+            margin-top: 20px; 
+        }
+        .imgangel {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            top: 4px;
+            left: 75px;
+            cursor: pointer;
+            background-color: #4d9fcf;
+            border-radius: 50%;
+        }
+	</style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <h1><a href="/" title="室内地图设备添加-摄像头添加" target="_blank">易景室内三维地图引擎</a>（室内地图设备添加）</h1>
+            <div class="tips-right">
+                <span class="tip1"></span>
+                <span class="tip2"></span>
+            </div>
+            <div class="tips-msg">
+                <div class="msg msg1">
+                    <div class="erweima"></div>
+                    <p>手机扫一扫进入体验</p>
+                </div>
+                <div class="msg msg2">
+                    <h4>室内地图设备添加功能(摄像头添加)</h4>
+                    <p>1. 在地图上点击添加摄像头位置</p>
+                    <p>2. 可以设置摄像头的探测边界范围</p>
+                    <div style="display: none">室内地图添加设备,室内地图添加摄像头,可以设置摄像头的探测边界范围,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="main">
+        <div class="stat-tree-body">
+            <table width="">
+                <tr>
+                    <td>
+                        <div id="formid" style="max-width:700px;float:left">
+                            <form action="#" method="post" id="zoneinfo" class="smart-green">
+                                <div class="form-group">
+                                    <label for="floorname" class="control-label">楼层名称:</label>
+                                    <select id="fid">
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="maintype" class="control-label">摄像头类型:</label>
+                                    <select id="maintype">
+                                        <option value="image/camera1.png">枪机</option>
+                                        <option value="image/camera2.png">球机</option>
+                                        <option value="image/camera3.png">半球</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="control-label">摄像头名称:</label>
+                                    <input type="text" class="form-control" id="title" placeholder="cameraName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deviceid" class="control-label">摄像头id:</label>
+                                    <input type="text" class="form-control" id="deviceid" placeholder="deviceid">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="angletype" class="control-label">摄像头角度:</label>
+                                    <input type="text" class="form-control" id="angletype" placeholder="angle">
+                                    <img class="imgangel" id="add" onclick = "addAngle()" src="image/camer/add.png">
+                                    <img class="imgangel" id="cut" onclick = "cutAngle()" src="image/camer/cut.png">
+                                </div>
+                                <div class="form-group">
+                                    <label for="longtitude" class="control-label">摄像头经度:</label>
+                                    <input type="text" class="form-control" id="longtitude" placeholder="longitude">
+                                </div>
+                                <div class="form-group">
+                                    <label for="latitude" class="control-label">摄像头纬度:</label>
+                                    <input type="text" class="form-control" id="latitude" placeholder="latitude">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gpsbounds" class="control-label">监控范围边界:</label>
+                                    <input type="text" class="form-control" id="gpsbounds" placeholder="(0,0),(1,1)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description" class="control-label">摄像头描述:</label>
+                                    <textarea class="form-control" l="8000" maxlength="8000" id="description"
+                                        placeholder="description"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <input type="button" class="mybutton" id="submit" value="保存" style="color:rgb(67, 104, 133);font-weight:700;border-radius:3px">
+                                </div>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="background:#fff;width:100%;height:100%;float:left" id="map-container"></div>
+                        <div style="position:relative;top:610px;background:#fff;height:0px;width:100%"></div>
+                    </td>
+                </tr>
+            </table>
+
+            <!--2D、3D按钮组  -->
+            <div class="viewmode-group">
+                <button id="btn3D" class="btn btn-default"></button>
+            </div>
+            <!--中心点、边界添加按钮组  -->
+            <div class="center-group btn-group-vertical" data-toggle="buttons">
+                <button id="addCenter" class="btn btn-default btnclass">添加摄像头位置</button>
+                <button id="addBound" class="btn btn-default btnclass">添加监控范围</button>
+                <button id="reset" class="btn btn-default btnclass">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../lib/config.js"></script>
+    <script src="../../lib/esmap.min.js"></script>
+    <script src="../../lib/jquery-2.1.4.min.js"></script>
+    <script src="../../lib/jquery.qrcode.min.js"></script>
+    <script src="../../lib/tips_controls.js"></script>
+    <script src="deviceadd.js"></script>
+</body>
+</html>
