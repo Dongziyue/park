@@ -291,6 +291,13 @@ def add_DepotCard():
     user.cardnum = cardnum
     db.session.commit()
 
+    # 新增一条收入数据
+    income = Income(money=money, method=3, type=type,
+                    carnum="购卡", cardnum=cardnum, source=0,
+                    time=cur_time, duration=0, trueincome=0)
+    db.session.add(income)
+    db.session.commit()
+
     data = {'code': 200, 'cardnum': depotcard.cardnum, 'username': user.username}
     return jsonify(data)
 
