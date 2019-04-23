@@ -203,7 +203,7 @@
                     </div>
                     <div class="col-lg-6" style="width: 30%; float: left;">
                         <div class="input-group">
-                            <input id="inputcardnum" placeholder="请输入卡号" type="text" class="form-control">
+                            <input id="inputcardnum" placeholder="请输入车牌号" type="text" class="form-control">
                             <span class="input-group-btn">
 								<button class="btn btn-default" type="button" onclick="checkOutByCardnum()">出库</button>
 							</span>
@@ -573,7 +573,7 @@
                 var data = data;
                 if (data.code == 200) {
                     var parkTem = "否";
-                    if (data.parktemp == 1) {
+                    if (data.cardnum == "") {
                         parkTem = "是";
                     }
                     var html =
@@ -597,8 +597,8 @@
                         + "<div class=\"input-group\">"
                         + "<input id=\"carNum\" name=\"carNum\" value=\"" + data.carnum + "\" type=\"text\" class=\"form-control\" readonly >"
                         + "</div></div>"
-                    /* 				+ "<label>是否临时停车：</label><br>"
-                                    +parkTem */
+                        + "<label>是否临时停车：</label><br>"
+                        + parkTem
                     $("#myModalLabel").html("车辆出库");
                     $("#checkSubmit").html("出库");
                     $("#checkSubmit").attr("onclick", "ispay(" + parknum + ",'" + data.cardnum + "','" + data.carnum + "')");
@@ -651,7 +651,7 @@
                     alert(data.va_msg);
                 }
                 else {
-                    alert(data.va_msg+'确认扣卡费'+data.money_pay+'元?');
+                    alert(data.va_msg + '确认扣卡费' + data.money_pay + '元?');
                     $("#pay_type").val(data.type);
                     $("#pay_money").val(data.money_pay);
                     if (data.type == 9) {
@@ -693,8 +693,8 @@
 
     /* 通过卡号/车牌号出库模态框显示 */
     function checkOutByCardnum() {
-        var cardnum = $("#inputcardnum").val();
-        if (cardnum == "") {
+        var carnum = $("#inputcardnum").val();
+        if (carnum == "") {
             alert("输入不能为空!");
             return false;
         }
@@ -702,34 +702,13 @@
             type: 'get',
             url: '/user/checkOutByCardnum',
             dataType: 'json',
-            data: {cardnum: cardnum},
+            data: {carnum: carnum},
             success: function (data) {
                 if (data.code == 200) {
-                    var parkTem = "否";
-                    if (data.parktem == 1) {
-                        parkTem = "是";
-                    }
-                    var html = "<input id=\"parkNum\" name=\"parkNum\" value=\"" + data.parknum + "\" hidden=\"hidden\"/><label>车位号：</label><div style=\"width: 30%;\">"
-                        + "<div class=\"input-group\">"
-                        + "<input readonly id=\"parkNum\" name=\"parkNum\" value=\"" + data.parknum + "\" type=\"text\" class=\"form-control\">"
-                        + "</div>"
-                        + "</div>"
-                        + "<label>出库卡号：</label><div style=\"width: 30%;\">"
-                        + "<div class=\"input-group\">"
-                        + "<input readonly id=\"cardNum\" name=\"cardNum\" value=\"" + data.cardnum + "\" type=\"text\" class=\"form-control\">"
-                        + "</div>"
-                        + "</div>"
-                        + "<label>车牌号：</label><div style=\"width: 30%;\">"
-                        + "<div class=\"input-group\">"
-                        + "<input readonly id=\"carNum\" name=\"carNum\" value=\"" + data.carnum + "\" type=\"text\" class=\"form-control\">"
-                        + "</div></div>"
-                        + "<label>是否临时停车：</label><br>"
-                        + parkTem
-                    $("#myModalLabel").html("车辆出库");
-                    $("#checkSubmit").html("出库");
-                    $("#checkSubmit").attr("onclick", "checkOutSubmit()");
-                    $(".modal-body").append(html);
-                    $("#myModal").modal('show');
+                    checkOut(data.parknum)
+                }
+                else {
+                    alert('该车不存在')
                 }
             }
         })

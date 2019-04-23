@@ -182,14 +182,13 @@ def checkOut():
     return jsonify({'code': 200})
 
 
-# 按停车卡出库
+# 按车牌出库
 @user.route('/checkOutByCardnum', methods=['POST', 'GET'])
 def checkOutByCardnum():
-    cardnum = request.args.get('cardnum')
-    parkspace = ParkSpace.query.filter_by(cardnum=cardnum).first()
-    parknum = parkspace.parkid
-
-    parkinfo = Parkinfo.query.filter_by(parknum=parknum, cardnum=cardnum).first()
+    carnum = request.args.get('carnum')
+    # parkspace = ParkSpace.query.filter_by(carnum=carnum).first()
+    # parknum = parkspace.parkid
+    parkinfo = Parkinfo.query.filter_by(carnum=carnum).first()
     if parkinfo:
         data = {'code': 200, 'parknum': parkinfo.parknum,
                 'cardnum': parkinfo.cardnum, 'carnum': parkinfo.carnum, 'parktemp': parkinfo.parktemp}
