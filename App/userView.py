@@ -480,3 +480,17 @@ def income():
         income = Income.query.filter_by().all()
         html = render_template('income.html', incomes=income)
     return html
+
+
+# 查看收入详情
+@user.route('/findIncomeInfo', methods=['POST', 'GET'])
+def findIncomeInfo():
+    incomeId = request.args.get('incomeId')
+    income = Income.query.filter_by(id=incomeId).first()
+    if income:
+        data = {'code': 200, 'source': income.source, 'method': income.method, 'carnum': income.carnum,
+                'cardnum': income.cardnum, 'money': income.money}
+    else:
+        data = {'code': 500}
+
+    return jsonify(data)

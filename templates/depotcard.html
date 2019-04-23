@@ -196,7 +196,7 @@
             data: $("#checkForm").serializeArray(),
             success: function (data) {
                 if (data.code == 200) {
-                    alert("添加成功！您的卡号为：" + data.cardnum + "。<br/>账号密码为：" + data.username + "。");
+                    alert("添加成功！您的卡号为：" + data.cardnum + "。账号密码为：" + data.username + "。");
                     $('#main').load('/user/depotCard');
                 } else {
                     alert("添加失败！账号已存在，请重新输入。");

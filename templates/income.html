@@ -65,7 +65,7 @@
                             {% elif item.method==2 %}
                                 {{ "微信" }}
                             {% elif item.method==3 %}
-                            {{ "卡充值" }}
+                                {{ "卡充值" }}
                             {% else %}
                                 {{ "扣卡费" }}
                             {% endif %}
@@ -114,6 +114,7 @@
     {#初始化序号#}
     $(function () {
             xuhao();
+
             function xuhao() {
                 $(".xuhao").each(function () {
                     var index = $(".xuhao").index(this) + 1;
@@ -132,39 +133,43 @@
     //查看详情
     function findIncomeInfo(item) {
         $.ajax({
-            type: 'post',
+            type: 'get',
             datatype: 'json',
-            data: {id: item},
-            url: '/depot-system/index/income/findIncomeInfo',
+            data: {"incomeId": item},
+            url: '/user/findIncomeInfo',
             success: function (data) {
-                if (data.code == 100) {
+                if (data.code == 200) {
                     var source = "";
                     var method = "";
-                    if (data.extend.income.source == 0) {
+                    if (data.source == 0) {
                         source = "充值";
                     } else {
                         source = "出库";
                     }
-                    if (data.extend.income.method == 0) {
+                    if (data.method == 0) {
                         method = "现金";
-                    } else if (data.extend.income.method == 1) {
+                    } else if (data.method == 1) {
                         method = "支付宝";
-                    } else {
+                    } else if (data.method == 2) {
                         method = "微信";
+                    } else if (data.method == 3) {
+                        method = "卡充值";
+                    } else if (data.method == 9) {
+                        method = "扣卡费";
                     }
                     var html = "<label>车牌号：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input value=\"" + data.extend.income.carnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
+                        + "<input value=\"" + data.carnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
                         + "</div>"
                         + "</div>"
                         + "<label>停车卡号：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input value=\"" + data.extend.income.cardnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
+                        + "<input value=\"" + data.cardnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
                         + "</div>"
                         + "</div>"
                         + "<label>收入：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input value=\"" + data.extend.income.money + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
+                        + "<input value=\"" + data.money + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
                         + "</div>"
                         + "</div>"
                         + "<label>收入来源：</label><div style=\"width: 30%;\">"
@@ -181,7 +186,7 @@
                     $("#myModal").modal('show');
                 }
                 else {
-                    alert(data.extend.va_msg);
+                    alert(data.va_msg);
                     return false;
                 }
             }
