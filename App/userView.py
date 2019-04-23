@@ -73,7 +73,7 @@ def parkDetail():
     cardnum = parkSpace.cardnum
     parkinfo = Parkinfo.query.filter_by(parknum=parknum).first()
 
-    if parkinfo:
+    if parkinfo.carnum:
         depotcard = Depotcard.query.filter_by(cardnum=cardnum).first()
         # 判断是否有卡
         if depotcard:
@@ -88,7 +88,7 @@ def parkDetail():
     return jsonify(data)
 
 
-# 车辆出库
+# 车辆出库车位详情
 @user.route('/ExParkSpace', methods=['POST', 'GET'])
 def ex_ParkSpace():
     parknum = request.args.get('parkNum')
@@ -114,8 +114,17 @@ def isPay():
     # 如果收费小于3元，收费3元
     if money_pay < 3:
         money_pay = 3.00
-
-    return jsonify({'code': 200, 'money_pay': money_pay, 'va_msg': '准备进入支付......确认出库？'})
+    # 是否刷停车卡
+    if parkinfo.cardnum:
+        # 可正常扣费
+        type = 0
+        depotcard = Depotcard.query.filter_by(cardnum=cardnum).first()
+        if depotcard.money < money_pay:
+            # 余额不足
+            type = 9
+        return jsonify({'code': 400, 'money_pay': money_pay, 'type': type, 'va_msg': '准备进入支付......确认出库？'})
+    else:
+        return jsonify({'code': 200, 'money_pay': money_pay, 'va_msg': '准备进入支付......确认出库？'})
 
 
 # 确认出库
@@ -143,6 +152,11 @@ def checkOut():
     db.session.commit()
     # 停车时长
     park_time = (parktime.seconds / 60)
+    # parkinfo表置空数据
+    parkinfo = Parkinfo.query.filter_by(parknum=parknum).first()
+    parkinfo.cardnum = ''
+    parkinfo.carnum = ''
+    db.session.commit()
     # 扣费
     if cardNum:
         # 有停车卡

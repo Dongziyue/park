@@ -272,7 +272,7 @@
                             </td>
                             <td>
                                 {% if item.tag==1 %}
-                                    {{ "固定车位" }}
+                                    {{ "正常车位" }}
                                 {% elif item.tag==2 %}
                                     {{ "临时车位" }}
                                 {% else %}
@@ -651,15 +651,15 @@
                     alert(data.va_msg);
                 }
                 else {
-                    alert(data.money_pay);
-                    $("#pay_type").val(data.extend.type);
+                    alert(data.va_msg+'确认扣卡费'+data.money_pay+'元?');
+                    $("#pay_type").val(data.type);
                     $("#pay_money").val(data.money_pay);
-                    if (data.extend.type == 9) {
-                        alert("系统出错！");
+                    if (data.type == 9) {
+                        alert("余额不足！请充值!");
                         return false;
                     }
                     //直接用卡扣费
-                    if (data.extend.type == 0) {
+                    if (data.type == 0) {
                         checkOutSubmit();
                     }
                     //月卡或年卡还没到期
