@@ -502,8 +502,7 @@ def incomeCharts1():
 def income():
     if request.method == "GET":
         income = Income.query.filter_by().all()
-        html = render_template('income.html', incomes=income)
-    return html
+        return render_template('income.html', incomes=income)
 
 
 # 查看收入详情
@@ -518,3 +517,20 @@ def findIncomeInfo():
         data = {'code': 500}
 
     return jsonify(data)
+
+
+# 按车牌号查找收入列表
+@user.route('/findAllIncome', methods=['POST', 'GET'])
+def findAllIncome():
+    content = request.args.get('content')
+    datetimepickerStart = request.args.get('startTime')
+    datetimepickerEnd = request.args.get('endTime')
+    num = request.args.get('num')
+    income = Income.query.filter_by().all()
+    if content != "" and datetimepickerStart == "" and datetimepickerEnd == "":
+        income = Income.query.filter_by(carnum=content).all()
+    elif datetimepickerStart != "" and datetimepickerEnd != "":
+        income = Income.query.filter(Income.time.between(datetimepickerStart, datetimepickerEnd))
+    # elif content != "" and datetimepickerStart != "" and datetimepickerEnd != "":
+    #     income = Income.query.filter(Income.time.between(datetimepickerStart, datetimepickerEnd), carnum=content)
+    return render_template('income.html', incomes=income)
