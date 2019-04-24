@@ -265,7 +265,15 @@ def depotcard():
     if request.method == "GET":
         depotcards = Depotcard.query.filter_by().all()
         html = render_template('depotcard.html', depotcards=depotcards, index=0)
-        return html
+        return render_template('depotcard.html', depotcards=depotcards)
+
+
+# 按手机号查找停车卡
+@user.route('/toDepotcardIndex', methods=['POST', 'GET'])
+def toDepotcardIndex():
+    cardnum = request.args.get('cardnum')
+    depotcard = Depotcard.query.filter_by(username=cardnum).all()
+    return render_template('depotcard.html', depotcards=depotcard)
 
 
 # 卡的类型
@@ -383,6 +391,22 @@ def depot():
         parkinfoall = Parkinfoall.query.filter_by().all()
         html = render_template('depot.html', parkinfoalls=parkinfoall)
         return html
+
+
+# 查看停车历史详情
+@user.route('/findParkinfoById', methods=['POST', 'GET'])
+def findParkinfoById():
+    parkinfoallId = request.form.get('id')
+    parkinfoall = Parkinfoall.query.filter_by(id=parkinfoallId).first()
+    parkinfoall = parkinfoall.to_dic()
+    if parkinfoall:
+        # data = {'code': 200, 'source': income.source, 'method': income.method, 'carnum': income.carnum,
+        #         'cardnum': income.cardnum, 'money': income.money}
+        data = {'code': 200, 'parkinfoall': parkinfoall}
+    else:
+        data = {'code': 500, 'va_msg': '该车未出库'}
+
+    return jsonify(data)
 
 
 # 用户管理

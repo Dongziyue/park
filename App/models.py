@@ -33,6 +33,18 @@ class Parkinfoall(db.Model):
     parkout = db.Column(db.Integer)
     parktemp = db.Column(db.Integer)
 
+    def to_dic(self):
+        dic = {
+            'id': self.id,
+            'parknum': self.parknum,
+            'cardnum': self.cardnum,
+            'carnum': self.carnum,
+            'parkin': self.parkin,
+            'parkout': self.parkout,
+            'parktemp': self.parktemp
+        }
+        return dic
+
 
 # 停车信息
 class Parkinfo(db.Model):

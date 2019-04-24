@@ -212,9 +212,13 @@
 
     function findDepotcardByCardnum() {
         var cardnum = $("#cardnum2").val();
-        $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex?cardnum=" + cardnum);
-        $("#findDepotcard").click();
-
+        if (cardnum == "") {
+            alert("请输入手机号")
+        }
+        else {
+            $("#findDepotcard").attr("href", "/user/toDepotcardIndex?cardnum=" + cardnum);
+            $("#findDepotcard").click();
+        }
     }
 
     /* 修改模态框显示*/
@@ -255,24 +259,24 @@
                         + "<select id=\"type\" name=\"type\" style=\"width:100px\" class=\"form-control\"> "
                         + option
                         + " </select>";
-                   // }
-                        $("#myModalLabel").html("修改停车卡");
-                        $("#checkSubmit").html("修改");
-                        if (data.depotcard.islose == 1) {
-                            $("#loseSubmit").show();
-                            $("#loseSubmit").attr("onclick", "changeLoseCardSubmit()");
-                        }
-                        $("#checkSubmit").attr("onclick", "isAlertType()");
-                        $(".modal-body").append(html);
-                        $("#myModal").modal('show');
-                        $("#type").val(data.depotcard.type);
-                        $("#islose").val(data.depotcard.islose);
+                    // }
+                    $("#myModalLabel").html("修改停车卡");
+                    $("#checkSubmit").html("修改");
+                    if (data.depotcard.islose == 1) {
+                        $("#loseSubmit").show();
+                        $("#loseSubmit").attr("onclick", "changeLoseCardSubmit()");
                     }
-                    $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
-                    $("#findDepotcard").click();
+                    $("#checkSubmit").attr("onclick", "isAlertType()");
+                    $(".modal-body").append(html);
+                    $("#myModal").modal('show');
+                    $("#type").val(data.depotcard.type);
+                    $("#islose").val(data.depotcard.islose);
                 }
+                $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                $("#findDepotcard").click();
+            }
 
-            })
+        })
     }
 
     //提交更换丢失的卡号

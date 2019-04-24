@@ -91,27 +91,27 @@
             type: 'post',
             datatype: 'json',
             data: {id: item},
-            url: '/depot-system/index/depot/findParkinfoById',
+            url: '/user/findParkinfoById',
             success: function (data) {
-                if (data.code == 100) {
+                if (data.code == 200) {
                     var html = "<label>车牌号：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input value=\"" + data.extend.parkinfoall.carnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
+                        + "<input value=\"" + data.parkinfoall.carnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
                         + "</div>"
                         + "</div>"
                         + "<label>停车卡号：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input value=\"" + data.extend.parkinfoall.cardnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
+                        + "<input value=\"" + data.parkinfoall.cardnum + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
                         + "</div>"
                         + "</div>"
                         + "<label>入库时间：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input value=\"" + data.extend.parkinfoall.parkin + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
+                        + "<input value=\"" + data.parkinfoall.parkin + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
                         + "</div>"
                         + "</div>"
                         + "<label>出库时间：</label><div style=\"width: 30%;\">"
                         + "<div class=\"input-group\">"
-                        + "<input value=\"" + data.extend.parkinfoall.parkout + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
+                        + "<input value=\"" + data.parkinfoall.parkout + "\" type=\"text\" class=\"form-control\" readonly  unselectable=\"on\">"
                         + "</div></div>";
                     $("#myModalLabel").html("收入详情");
                     $("#checkSubmit").hide();
@@ -119,7 +119,7 @@
                     $("#myModal").modal('show');
                 }
                 else {
-                    alert(data.extend.va_msg);
+                    alert(data.va_msg);
                     return false;
                 }
             }
