@@ -529,8 +529,9 @@ def findAllIncome():
     income = Income.query.filter_by().all()
     if content != "" and datetimepickerStart == "" and datetimepickerEnd == "":
         income = Income.query.filter_by(carnum=content).all()
-    elif datetimepickerStart != "" and datetimepickerEnd != "":
+    if datetimepickerStart != "" and datetimepickerEnd != "":
         income = Income.query.filter(Income.time.between(datetimepickerStart, datetimepickerEnd))
-    # elif content != "" and datetimepickerStart != "" and datetimepickerEnd != "":
-    #     income = Income.query.filter(Income.time.between(datetimepickerStart, datetimepickerEnd), carnum=content)
+    if content != "" and datetimepickerStart != "" and datetimepickerEnd != "":
+        income = Income.query.filter(Income.time.between(datetimepickerStart, datetimepickerEnd),
+                                     Income.carnum == content)
     return render_template('income.html', incomes=income)
