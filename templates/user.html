@@ -72,25 +72,25 @@
         {% endfor %}
     {% endif %}
 </table>
-<ul class="pagination">
-
-    <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current}"
-           target="main"
-           onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>
-    <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current+1}"
-           target="main"
-           onclick="$('div#main').load(this.href);return false;">${users.current+1}</a></li>
-    <c:if test="${users.current+1>=users.countPage}">
-        <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current+1}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-    </c:if>
-    <c:if test="${users.current+1<users.countPage}">
-        <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current+2}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-    </c:if>
-</ul>
+{#<ul class="pagination">#}
+{##}
+{#    <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current}"#}
+{#           target="main"#}
+{#           onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>#}
+{#    <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current+1}"#}
+{#           target="main"#}
+{#           onclick="$('div#main').load(this.href);return false;">${users.current+1}</a></li>#}
+{#    <c:if test="${users.current+1>=users.countPage}">#}
+{#        <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current+1}"#}
+{#               target="main"#}
+{#               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+{#    </c:if>#}
+{#    <c:if test="${users.current+1<users.countPage}">#}
+{#        <li><a href="${APP_PATH }/index/findAllUser?tag=${users.tag}&&page=${users.current+2}"#}
+{#               target="main"#}
+{#               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+{#    </c:if>#}
+{#</ul>#}
 <script type="text/javascript">
     {#初始化序号#}
     $(function () {

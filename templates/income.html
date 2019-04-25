@@ -56,7 +56,7 @@
                         <td class="xuhao"></td>
                         <td>{{ item.carnum }}</td>
                         <td>{{ item.cardnum }}</td>
-                        <td>{{ item.money }}</td>
+                        <td class="money">{{ item.money }}</td>
                         <td>
                             {% if item.method==0 %}
                                 {{ "现金" }}
@@ -87,39 +87,48 @@
             {% endif %}
         </c:forEach>
     </table>
-    <ul class="pagination">
-
-        <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>
-        <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current+1}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">${incomes.current+1}</a></li>
-        <c:if test="${incomes.current+1>=incomes.countPage}">
-            <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current+1}"
-                   target="main"
-                   onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-        </c:if>
-        <c:if test="${incomes.current+1<incomes.countPage}">
-            <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current+2}"
-                   target="main"
-                   onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-        </c:if>
-    </ul>
+    {#    <ul class="pagination">#}
+    {##}
+    {#        <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current}"#}
+    {#               target="main"#}
+    {#               onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>#}
+    {#        <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current+1}"#}
+    {#               target="main"#}
+    {#               onclick="$('div#main').load(this.href);return false;">${incomes.current+1}</a></li>#}
+    {#        <c:if test="${incomes.current+1>=incomes.countPage}">#}
+    {#            <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current+1}"#}
+    {#                   target="main"#}
+    {#                   onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+    {#        </c:if>#}
+    {#        <c:if test="${incomes.current+1<incomes.countPage}">#}
+    {#            <li><a href="${APP_PATH }/index/findAllIncome?tag=${incomes.tag}&&page=${incomes.current+2}"#}
+    {#                   target="main"#}
+    {#                   onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+    {#        </c:if>#}
+    {#    </ul>#}
     <div style="float: right;margin-right: 6%">
-        总收入：${countMoney}元<br>
+        总收入：<span class="countmoney"></span>元<br>
     </div>
 </form>
 <script type="text/javascript">
     {#初始化序号#}
     $(function () {
             xuhao();
+            countmoney();
 
             function xuhao() {
                 $(".xuhao").each(function () {
                     var index = $(".xuhao").index(this) + 1;
                     $(this).html(index);
                 })
+            }
+
+            function countmoney() {
+                var countmoney = 0
+                $(".money").each(function () {
+                    countmoney = parseFloat($(this).html()) + countmoney;
+                })
+                $(".countmoney").html(countmoney.toFixed(2));
             }
         }
     )

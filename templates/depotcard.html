@@ -69,29 +69,29 @@
 </table>
 
 
-<ul class="pagination">
-
-    <li>
-        <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current}&&cardnum=${depotcardManagerDatas.extra}"
-           target="main"
-           onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>
-    <li>
-        <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current+1}&&cardnum=${depotcardManagerDatas.extra}"
-           target="main"
-           onclick="$('div#main').load(this.href);return false;">${depotcardManagerDatas.current+1}</a></li>
-    <c:if test="${depotcardManagerDatas.current+1>=depotcardManagerDatas.countPage}">
-        <li>
-            <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current+1}&&cardnum=${depotcardManagerDatas.extra}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-    </c:if>
-    <c:if test="${depotcardManagerDatas.current+1<depotcardManagerDatas.countPage}">
-        <li>
-            <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current+2}&&cardnum=${depotcardManagerDatas.extra}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-    </c:if>
-</ul>
+{#<ul class="pagination">#}
+{##}
+{#    <li>#}
+{#        <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current}&&cardnum=${depotcardManagerDatas.extra}"#}
+{#           target="main"#}
+{#           onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>#}
+{#    <li>#}
+{#        <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current+1}&&cardnum=${depotcardManagerDatas.extra}"#}
+{#           target="main"#}
+{#           onclick="$('div#main').load(this.href);return false;">${depotcardManagerDatas.current+1}</a></li>#}
+{#    <c:if test="${depotcardManagerDatas.current+1>=depotcardManagerDatas.countPage}">#}
+{#        <li>#}
+{#            <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current+1}&&cardnum=${depotcardManagerDatas.extra}"#}
+{#               target="main"#}
+{#               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+{#    </c:if>#}
+{#    <c:if test="${depotcardManagerDatas.current+1<depotcardManagerDatas.countPage}">#}
+{#        <li>#}
+{#            <a href="${APP_PATH }/index/toDepotcardIndex?tag=${depotcardManagerDatas.tag}&&page=${depotcardManagerDatas.current+2}&&cardnum=${depotcardManagerDatas.extra}"#}
+{#               target="main"#}
+{#               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+{#    </c:if>#}
+{#</ul>#}
 
 <script type="text/javascript">
     $(function () {

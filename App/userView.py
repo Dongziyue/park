@@ -285,26 +285,21 @@ def isAlertType():
         # 如果月卡钱不足
         if depotcard.money < depotinfo.monthcard:
             money_pay = depotinfo.monthcard - depotcard.money
-            print(11111)
             return jsonify({'code': 500, 'money_pay': money_pay})
         else:
             # money_pay = depotcard.money - depotinfo.monthcard
             money_pay = 0
-            print(22222)
             return jsonify({'code': 200, 'money_pay': money_pay})
 
     if int(type) == 3:
         # 如果年卡钱不足
         if depotcard.money < depotinfo.yearcard:
             money_pay = depotinfo.yearcard - depotcard.money
-            print(333333)
             return jsonify({'code': 500, 'money_pay': money_pay})
         else:
             # money_pay = depotcard.money - depotinfo.yearcard
             money_pay = 0
-            print(4444444)
             return jsonify({'code': 200, 'money_pay': money_pay})
-    print(555)
     return jsonify({'code': 200, 'money_pay': money_pay})
 
 
@@ -317,12 +312,6 @@ def alertDepotCard():
     alertpayid = request.form.get('alertpayid')  # 用什么方式支付（0现金，1支付宝，2微信，9从卡中扣费）
     alertpay_money = request.form.get('alertpay_money')  # 需要支付金额
     alertpay_type = request.form.get('alertpay_type')  # 扣费还是月卡或年卡未到期 (0扣费，1不用扣费，9付钱)
-    print(cardnum)
-    print(islose)
-    print(type)
-    print(alertpayid)
-    print(alertpay_money)
-    print(alertpay_type)
     if islose == None:
         islose = 0
     depotcard = Depotcard.query.filter_by(cardnum=cardnum).first()
