@@ -5,7 +5,7 @@ import uuid
 from flask import Blueprint, request, render_template, session, redirect, url_for, jsonify
 
 from App.ext import db
-from App.models import User, ParkSpace, Parkinfoall, Parkinfo, Depotcard, Cardtype, Income
+from App.models import User, ParkSpace, Parkinfoall, Parkinfo, Depotcard, Cardtype, Income, Depotinfo
 
 user = Blueprint('user', __name__)
 
@@ -264,8 +264,81 @@ def login():
 def depotcard():
     if request.method == "GET":
         depotcards = Depotcard.query.filter_by().all()
-        html = render_template('depotcard.html', depotcards=depotcards, index=0)
         return render_template('depotcard.html', depotcards=depotcards)
+
+
+# 判断能否升级卡
+@user.route('/isAlertType', methods=['post', 'get'])
+def isAlertType():
+    cardnum = request.form.get('cardnum')
+    islose = request.form.get('islose')
+    type = request.form.get('type')
+    print(cardnum)
+    print(islose)
+    print(type)
+    money_pay = 0
+    depotinfo = Depotinfo.query.filter_by(id=1).first()
+    depotcard = Depotcard.query.filter_by(cardnum=cardnum).first()
+    # depotcard.type = type
+    # db.session.commit()
+    if int(type) == 2:
+        # 如果月卡钱不足
+        if depotcard.money < depotinfo.monthcard:
+            money_pay = depotinfo.monthcard - depotcard.money
+            print(11111)
+            return jsonify({'code': 500, 'money_pay': money_pay})
+        else:
+            # money_pay = depotcard.money - depotinfo.monthcard
+            money_pay = 0
+            print(22222)
+            return jsonify({'code': 200, 'money_pay': money_pay})
+
+    if int(type) == 3:
+        # 如果年卡钱不足
+        if depotcard.money < depotinfo.yearcard:
+            money_pay = depotinfo.yearcard - depotcard.money
+            print(333333)
+            return jsonify({'code': 500, 'money_pay': money_pay})
+        else:
+            # money_pay = depotcard.money - depotinfo.yearcard
+            money_pay = 0
+            print(4444444)
+            return jsonify({'code': 200, 'money_pay': money_pay})
+    print(555)
+    return jsonify({'code': 200, 'money_pay': money_pay})
+
+
+# 修改停车卡信息
+@user.route('/alertDepotCard', methods=['post', 'get'])
+def alertDepotCard():
+    cardnum = request.form.get('cardnum')
+    islose = request.form.get('islose')
+    type = request.form.get('type')
+    alertpayid = request.form.get('alertpayid')  # 用什么方式支付（0现金，1支付宝，2微信，9从卡中扣费）
+    alertpay_money = request.form.get('alertpay_money')  # 需要支付金额
+    alertpay_type = request.form.get('alertpay_type')  # 扣费还是月卡或年卡未到期 (0扣费，1不用扣费，9付钱)
+    print(cardnum)
+    print(islose)
+    print(type)
+    print(alertpayid)
+    print(alertpay_money)
+    print(alertpay_type)
+    if islose == None:
+        islose = 0
+    depotcard = Depotcard.query.filter_by(cardnum=cardnum).first()
+    depotcard.money = depotcard.money + float(alertpay_money)
+    depotcard.type = type
+    depotcard.illegalcount = islose
+    db.session.commit()
+    # 收入管理插入一条数据
+    cur_time = datetime.datetime.now()
+    if float(alertpay_money) > 0:
+        income = Income(money=alertpay_money, method=3, type=type,
+                        carnum="升级卡", cardnum=cardnum, source=0,
+                        time=cur_time, duration=0, trueincome=0)
+        db.session.add(income)
+        db.session.commit()
+    return jsonify({'code': 200})
 
 
 # 按手机号查找停车卡
@@ -348,7 +421,6 @@ def findDepotCardByCardnum():
 
     depotcard = depotcard.to_dic()
 
-    data = {'code': 200, 'cardTypes': payload, 'depotcard': depotcard}
     return jsonify({'code': 200, 'cardTypes': payload, 'depotcard': depotcard})
 
 

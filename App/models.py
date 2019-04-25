@@ -87,6 +87,16 @@ class Cardtype(db.Model):
     type = db.Column(db.String(50))  # 卡类型
 
 
+# 停车长收费规则
+class Depotinfo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hourmoney = db.Column(db.FLOAT, default=0.00)
+    monthcard = db.Column(db.FLOAT, default=0.00)
+    yearcard = db.Column(db.FLOAT, default=0.00)
+    mhmoney = db.Column(db.FLOAT, default=0.00)
+    yhmoney = db.Column(db.FLOAT, default=0.00)
+
+
 # 车场收入
 class Income(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -50,10 +50,10 @@
                 <td>{{ item.username }}</td>
                 <td>{{ item.time }}</td>
                 <td>
-                    {% if item.islose==0 %}
-                        是
-                    {% else %}
+                    {% if item.illegalcount==0 %}
                         否
+                    {% else %}
+                        是
                     {% endif %}
                 </td>
                 <td>
@@ -204,7 +204,7 @@
                 }
                 $("#myModal").modal('hide');
                 $("#myModal1").modal('hide');
-                $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                $("#findDepotcard").attr("href", "/user/depotCard");
                 $("#findDepotcard").click();
             }
         })
@@ -272,7 +272,7 @@
                     $("#type").val(data.depotcard.type);
                     $("#islose").val(data.depotcard.islose);
                 }
-                $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                $("#findDepotcard").attr("href", "/user/depotCard");
                 $("#findDepotcard").click();
             }
 
@@ -290,7 +290,7 @@
             success: function (data) {
                 if (data.code == 100) {
                     $("#myModal").modal('hide');
-                    $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                    $("#findDepotcard").attr("href", "/user/depotCard");
                     $("#findDepotcard").click();
                 } else {
                     alert("系统错误！");
@@ -304,30 +304,30 @@
         //先判断是否修改卡类型(pay_type  (0扣费，9付钱(默认)))
         $.ajax({
             type: 'post',
-            url: '/depot-system/index/card/isAlertType',
+            url: '/user/isAlertType',
             datatype: 'text',
             async: false,
             data: $("#checkForm").serializeArray(),
             contentType: 'application/x-www-form-urlencoded',
             success: function (data) {
-                if (data.code == 100) {
-                    if (data.extend.money_pay == 0) {
+                if (data.code == 200) {
+                    if (data.money_pay == 0) {
                         $("#alertpay_type").val(0);
                         $("#alertpay_money").val(0);
                     }
                     else {
                         $("#alertpay_type").val(0);
-                        $("#alertpay_money").val(data.extend.money_pay);
+                        $("#alertpay_money").val(data.money_pay);
                     }
                     //没有改变type或者足够扣费
                     alertDepotCardSubmit();
                 }
                 else {
                     $("#myModal1").modal('show');
-                    $("#zfb_text").text(data.extend.money_pay);
-                    $("#wx_text").text(data.extend.money_pay);
-                    $("#cash_text").text(data.extend.money_pay);
-                    $("#alertpay_money").val(data.extend.money_pay);
+                    $("#zfb_text").text(data.money_pay);
+                    $("#wx_text").text(data.money_pay);
+                    $("#cash_text").text(data.money_pay);
+                    $("#alertpay_money").val(data.money_pay);
                     $("#paySubmit").attr("onclick", "alertDepotCardSubmit()");
                 }
             }
@@ -342,14 +342,14 @@
         }
         $.ajax({
             type: 'post',
-            url: '/depot-system/index/card/alertDepotCard',
+            url: '/user/alertDepotCard',
             datatype: 'json',
             data: $("#checkForm").serializeArray(),
             success: function (data) {
-                if (data.code == 100) {
+                if (data.code == 200) {
                     $("#myModal").modal('hide');
                     $("#myModal1").modal('hide');
-                    $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                    $("#findDepotcard").attr("href", "/user/depotCard");
                     $("#findDepotcard").click();
                 } else {
                     alert("停车卡没有修改");
@@ -387,7 +387,7 @@
                 }
                 else {
                     $("#myModal").modal('hide');
-                    $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                    $("#findDepotcard").attr("href", "/user/depotCard");
                     $("#findDepotcard").click();
                     alert(data.extend.va_msg);
                 }
@@ -498,7 +498,7 @@
                     $("#myModal").modal('hide');
                     alert(data.extend.va_msg);
                     $("#myModal1").modal('hide');
-                    $("#findDepotcard").attr("href", "${APP_PATH }/index/toDepotcardIndex");
+                    $("#findDepotcard").attr("href", "/user/depotCard");
                     $("#findDepotcard").click();
                 }
             }
