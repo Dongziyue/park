@@ -7,9 +7,9 @@
         <div class="col-lg-6" style="width: 30%; float: left;">
 
             <div class="input-group">
-                <c:if test="${sessionScope.user.role!=3 }">
-                    <input id="number" placeholder="请输入车位号/卡号/车牌号" type="text" class="form-control">
-                </c:if>
+{#                <c:if test="${sessionScope.user.role!=3 }">#}
+{#                    <input id="number" placeholder="请输入车位号/卡号/车牌号" type="text" class="form-control">#}
+{#                </c:if>#}
                 <c:if test="${sessionScope.user.role==3 }">
                     <input id="number" placeholder="车牌号" type="text" class="form-control">
                 </c:if>
@@ -48,29 +48,29 @@
         {% endfor %}
     {% endif %}
 </table>
-<ul class="pagination">
-
-    <li>
-        <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current}&&name=${parkinfoallDatas.extra}"
-           target="main"
-           onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>
-    <li>
-        <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current+1}&&name=${parkinfoallDatas.extra}"
-           target="main"
-           onclick="$('div#main').load(this.href);return false;">${parkinfoallDatas.current+1}</a></li>
-    <c:if test="${parkinfoallDatas.current+1>=parkinfoallDatas.countPage}">
-        <li>
-            <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current+1}&&name=${parkinfoallDatas.extra}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-    </c:if>
-    <c:if test="${parkinfoallDatas.current+1<parkinfoallDatas.countPage}">
-        <li>
-            <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current+2}&&name=${parkinfoallDatas.extra}"
-               target="main"
-               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>
-    </c:if>
-</ul>
+{#<ul class="pagination">#}
+{##}
+{#    <li>#}
+{#        <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current}&&name=${parkinfoallDatas.extra}"#}
+{#           target="main"#}
+{#           onclick="$('div#main').load(this.href);return false;">&laquo;</a></li>#}
+{#    <li>#}
+{#        <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current+1}&&name=${parkinfoallDatas.extra}"#}
+{#           target="main"#}
+{#           onclick="$('div#main').load(this.href);return false;">${parkinfoallDatas.current+1}</a></li>#}
+{#    <c:if test="${parkinfoallDatas.current+1>=parkinfoallDatas.countPage}">#}
+{#        <li>#}
+{#            <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current+1}&&name=${parkinfoallDatas.extra}"#}
+{#               target="main"#}
+{#               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+{#    </c:if>#}
+{#    <c:if test="${parkinfoallDatas.current+1<parkinfoallDatas.countPage}">#}
+{#        <li>#}
+{#            <a href="${APP_PATH }/index/findAllDepot?tag=${parkinfoallDatas.tag}&&page=${parkinfoallDatas.current+2}&&name=${parkinfoallDatas.extra}"#}
+{#               target="main"#}
+{#               onclick="$('div#main').load(this.href);return false;">&raquo;</a></li>#}
+{#    </c:if>#}
+{#</ul>#}
 <script type="text/javascript">
     {#初始化序号#}
     $(function () {
@@ -129,7 +129,7 @@
 
     function findDepotNum() {
         var number = $("#number").val();
-        $("#findAllDepot").attr("href", "${APP_PATH }/index/findAllDepot?name=" + number);
+        $("#findAllDepot").attr("href", "/user/findAllDepot?name=" + number);
         $("#findAllDepot").click();
 
     }

@@ -450,8 +450,16 @@ def delete_DepotCardSubmit():
 def depot():
     if request.method == "GET":
         parkinfoall = Parkinfoall.query.filter_by().all()
-        html = render_template('depot.html', parkinfoalls=parkinfoall)
-        return html
+        return render_template('depot.html', parkinfoalls=parkinfoall)
+
+
+# 按车牌号查找停车历史
+@user.route('/findAllDepot', methods=['POST', 'GET'])
+def findAllDepot():
+    if request.method == "GET":
+        carnum = request.args.get('name')
+        parkinfoall = Parkinfoall.query.filter_by(carnum=carnum).all()
+        return render_template('depot.html', parkinfoalls=parkinfoall)
 
 
 # 查看停车历史详情
